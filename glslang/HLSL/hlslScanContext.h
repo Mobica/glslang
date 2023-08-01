@@ -73,8 +73,7 @@ struct HlslToken {
 //
 class HlslScanContext {
 public:
-    HlslScanContext(TParseContextBase& parseContext, TPpContext& ppContext)
-        : parseContext(parseContext), ppContext(ppContext) { }
+    HlslScanContext(TParseContextBase& parseContext, TPpContext& ppContext);
     virtual ~HlslScanContext() { }
 
     static void fillInKeywordMap();
@@ -102,6 +101,9 @@ protected:
 
     const char* tokenText;
     EHlslTokenClass keyword;
+
+private:
+    void Extend16BitTypeKeywordMap();
 };
 
 } // end namespace glslang

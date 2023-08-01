@@ -537,6 +537,12 @@ void HlslScanContext::deleteKeywordMap()
     SemanticMap = nullptr;
 }
 
+HlslScanContext::HlslScanContext(TParseContextBase& parseContext, TPpContext& ppContext)
+    : parseContext(parseContext), ppContext(ppContext)
+{
+    Extend16BitTypeKeywordMap();
+}
+
 // Wrapper for tokenizeClass() to get everything inside the token.
 void HlslScanContext::tokenize(HlslToken& token)
 {
@@ -1058,6 +1064,19 @@ EHlslTokenClass HlslScanContext::reservedWord()
         parseContext.error(loc, "Reserved word.", tokenText, "", "");
 
     return EHTokNone;
+}
+
+void HlslScanContext::Extend16BitTypeKeywordMap()
+{
+    static bool wasInit = false;
+    if (wasInit != false) return;
+    if (KeywordMap == nullptr) return;
+    if (parseContext.hlslEnable16BitTypes() != false) return;
+
+    wasInit = true;
+    (*KeywordMap)["float16_t"] = EHTokMin16float;
+    (*KeywordMap)["int16_t"] =   EHTokMin16int;
+    (*KeywordMap)["uint16_t"] =  EHTokMin16uint;
 }
 
 } // end namespace glslang
